@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "626817516932",
+    "project_id": "barechat-53372",
+    "storage_bucket": "barechat-53372.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626817516932:android:6d094e21e2968f9ec7c9d1",
+        "android_client_info": {
+          "package_name": "com.menschlennart.gaychat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "626817516932-00o0ppu77lvv1539qfa9bm5n3fng36np.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd6USzdTeFTHfGRX0m5Wd0eclHZr3h1o4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "626817516932-00o0ppu77lvv1539qfa9bm5n3fng36np.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "626817516932-egq34mui9k1fu32n3chf8nbvvp7to1ef.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.menschlennart.gaychat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
