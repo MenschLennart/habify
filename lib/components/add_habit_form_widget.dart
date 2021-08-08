@@ -1,3 +1,7 @@
+import 'package:flutter/services.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_drop_down_template.dart';
@@ -19,7 +23,7 @@ class AddHabitFormWidget extends StatefulWidget {
 }
 
 class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
-  DateTime datePicked = DateTime.now();
+  DateTime datePicked;
   String habitTypeValue;
   TextEditingController nameController;
   TextEditingController descriptionController;
@@ -28,8 +32,10 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
   @override
   void initState() {
     super.initState();
+    datePicked = DateTime.now();
     descriptionController = TextEditingController();
     nameController = TextEditingController();
+    initializeDateFormatting('de_DE', null);
   }
 
   @override
@@ -154,6 +160,9 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                     ),
+                                    inputFormatters: [
+                                      new LengthLimitingTextInputFormatter(21)
+                                    ],
                                     validator: (val) {
                                       if (val.isEmpty) {
                                         return 'Field is required';
@@ -239,6 +248,9 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       fontWeight: FontWeight.normal,
                                     ),
                                     textAlign: TextAlign.start,
+                                    inputFormatters: [
+                                      new LengthLimitingTextInputFormatter(150)
+                                    ],
                                     maxLines: 4,
                                     keyboardType: TextInputType.multiline,
                                     validator: (val) {
@@ -287,7 +299,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                 ),
                               ),
                               Text(
-                                dateTimeFormat('MMMMEEEEd', datePicked),
+                                DateFormat.yMMMMd('de_DE').format(datePicked),
                                 style: FlutterFlowTheme.bodyText1.override(
                                   fontFamily: 'Manrope',
                                   color: FlutterFlowTheme.tertiaryColor,
