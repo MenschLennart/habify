@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:duration/duration.dart';
+
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -20,6 +23,37 @@ class PinnedHabitWidgetWidget extends StatefulWidget {
 }
 
 class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
+  Timer _timer;
+  String _habitTimeDuration;
+  DateTime _habitDateTime;
+
+  String _habitTimeToDuration(DateTime habitDateTime, DurationTersity tersity) {
+    Duration difference = DateTime.now().difference(habitDateTime);
+    return printDuration(aMinute * difference.inMinutes, tersity: tersity);
+  }
+
+  @override
+  void initState() {
+    _habitDateTime = widget.habitRecord.createdAt;
+    _updateHabitDuration();
+    _timer = new Timer.periodic(
+        Duration(minutes: 1), (Timer timer) => _updateHabitDuration());
+    super.initState();
+  }
+
+  void _updateHabitDuration() {
+    setState(() {
+      _habitTimeDuration =
+          _habitTimeToDuration(_habitDateTime, DurationTersity.hour);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -56,7 +90,32 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Text(
-                    '1 Tage 12 Stunden',
+                    _habitTimeDuration,
+                    style: FlutterFlowTheme.bodyText1.override(
+                      fontFamily: 'Manrope',
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    widget.habitRecord.createdAt.toString(),
+                    style: FlutterFlowTheme.bodyText1.override(
+                      fontFamily: 'Manrope',
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text(
+                    widget.habitRecord.createdAt
+                        .difference(DateTime.now())
+                        .inMinutes
+                        .toString(),
                     style: FlutterFlowTheme.bodyText1.override(
                       fontFamily: 'Manrope',
                     ),
