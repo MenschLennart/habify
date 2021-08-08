@@ -22,12 +22,67 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Color(0xFFFAFAFA),
+      appBar: AppBar(
+        backgroundColor: FlutterFlowTheme.secondaryColor,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Dashboard',
+          style: FlutterFlowTheme.title2.override(
+            fontFamily: 'Poppins',
+            color: Color(0xFFF0F0F0),
+          ),
+        ),
+        actions: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: Color(0x73000000),
+                          size: 24,
+                        )
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.settings,
+                          color: Color(0x73000000),
+                          size: 24,
+                        )
+                      ],
+                    )
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+        centerTitle: true,
+        elevation: 4,
+      ),
+      backgroundColor: FlutterFlowTheme.secondaryColor,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print('FloatingActionButton pressed ...');
         },
-        backgroundColor: FlutterFlowTheme.primaryColor,
+        backgroundColor: Color(0x7EEE60C8),
         elevation: 8,
         child: IconButton(
           onPressed: () async {
@@ -86,70 +141,78 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       width: 200,
                                       height: 150,
                                       decoration: BoxDecoration(
-                                        color: Color(0xFF345AE0),
+                                        color: Color(0x27000000),
                                         borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: StreamBuilder<List<HabitsRecord>>(
-                                        stream: queryHabitsRecord(
-                                          queryBuilder: (habitsRecord) =>
-                                              habitsRecord.where('user',
-                                                  isEqualTo:
-                                                      currentUserReference),
-                                          singleRecord: true,
+                                        border: Border.all(
+                                          color: Color(0x32000000),
                                         ),
-                                        builder: (context, snapshot) {
-                                          // Customize what your widget looks like when it's loading.
-                                          if (!snapshot.hasData) {
-                                            return Center(
-                                              child: SizedBox(
-                                                width: 50,
-                                                height: 50,
-                                                child: SpinKitDoubleBounce(
-                                                  color: FlutterFlowTheme
-                                                      .primaryColor,
-                                                  size: 50,
+                                      ),
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                        child:
+                                            StreamBuilder<List<HabitsRecord>>(
+                                          stream: queryHabitsRecord(
+                                            queryBuilder: (habitsRecord) =>
+                                                habitsRecord
+                                                    .where(
+                                                        'user',
+                                                        isEqualTo:
+                                                            currentUserReference)
+                                                    .orderBy('created_at',
+                                                        descending: true),
+                                            singleRecord: true,
+                                          ),
+                                          builder: (context, snapshot) {
+                                            // Customize what your widget looks like when it's loading.
+                                            if (!snapshot.hasData) {
+                                              return Center(
+                                                child: SizedBox(
+                                                  width: 50,
+                                                  height: 50,
+                                                  child: SpinKitDoubleBounce(
+                                                    color: FlutterFlowTheme
+                                                        .primaryColor,
+                                                    size: 50,
+                                                  ),
                                                 ),
-                                              ),
+                                              );
+                                            }
+                                            List<HabitsRecord>
+                                                columnHabitsRecordList =
+                                                snapshot.data;
+                                            // Customize what your widget looks like with no query results.
+                                            if (snapshot.data.isEmpty) {
+                                              return Container(
+                                                height: 100,
+                                                child: Center(
+                                                  child: Text('No results.'),
+                                                ),
+                                              );
+                                            }
+                                            final columnHabitsRecord =
+                                                columnHabitsRecordList.first;
+                                            return Column(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Text(
+                                                      columnHabitsRecord.name,
+                                                      style: FlutterFlowTheme
+                                                          .subtitle2
+                                                          .override(
+                                                        fontFamily: 'Poppins',
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              ],
                                             );
-                                          }
-                                          List<HabitsRecord>
-                                              listTileHabitsRecordList =
-                                              snapshot.data;
-                                          // Customize what your widget looks like with no query results.
-                                          if (snapshot.data.isEmpty) {
-                                            return Container(
-                                              height: 100,
-                                              child: Center(
-                                                child: Text('No results.'),
-                                              ),
-                                            );
-                                          }
-                                          final listTileHabitsRecord =
-                                              listTileHabitsRecordList.first;
-                                          return ListTile(
-                                            title: Text(
-                                              listTileHabitsRecord.name,
-                                              style: FlutterFlowTheme.title3
-                                                  .override(
-                                                fontFamily: 'Poppins',
-                                              ),
-                                            ),
-                                            subtitle: Text(
-                                              listTileHabitsRecord.description,
-                                              style: FlutterFlowTheme.subtitle2
-                                                  .override(
-                                                fontFamily: 'Poppins',
-                                              ),
-                                            ),
-                                            trailing: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: Color(0xFF303030),
-                                              size: 20,
-                                            ),
-                                            tileColor: Color(0xFFF5F5F5),
-                                            dense: false,
-                                          );
-                                        },
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -161,66 +224,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                       width: 200,
                                       height: 150,
                                       decoration: BoxDecoration(
-                                        color: FlutterFlowTheme.secondaryColor,
+                                        color: Color(0x27000000),
                                         borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: StreamBuilder<List<HabitsRecord>>(
-                                        stream: queryHabitsRecord(
-                                          singleRecord: true,
+                                        border: Border.all(
+                                          color: Color(0x32000000),
                                         ),
-                                        builder: (context, snapshot) {
-                                          // Customize what your widget looks like when it's loading.
-                                          if (!snapshot.hasData) {
-                                            return Center(
-                                              child: SizedBox(
-                                                width: 50,
-                                                height: 50,
-                                                child: SpinKitDoubleBounce(
-                                                  color: FlutterFlowTheme
-                                                      .primaryColor,
-                                                  size: 50,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                          List<HabitsRecord>
-                                              listTileHabitsRecordList =
-                                              snapshot.data;
-                                          // Customize what your widget looks like with no query results.
-                                          if (snapshot.data.isEmpty) {
-                                            return Container(
-                                              height: 100,
-                                              child: Center(
-                                                child: Text('No results.'),
-                                              ),
-                                            );
-                                          }
-                                          final listTileHabitsRecord =
-                                              listTileHabitsRecordList.first;
-                                          return ListTile(
-                                            title: Text(
-                                              listTileHabitsRecord.name,
-                                              style: FlutterFlowTheme.title3
-                                                  .override(
-                                                fontFamily: 'Poppins',
-                                              ),
-                                            ),
-                                            subtitle: Text(
-                                              listTileHabitsRecord.description,
-                                              style: FlutterFlowTheme.subtitle2
-                                                  .override(
-                                                fontFamily: 'Poppins',
-                                              ),
-                                            ),
-                                            trailing: Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: Color(0xFF303030),
-                                              size: 20,
-                                            ),
-                                            tileColor: Color(0xFFF5F5F5),
-                                            dense: false,
-                                          );
-                                        },
                                       ),
                                     ),
                                   ),
@@ -234,136 +242,232 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                               endIndent: 10,
                               color: Color(0xFFAC2C8A),
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: StreamBuilder<List<HabitsRecord>>(
-                                    stream: queryHabitsRecord(
-                                      queryBuilder: (habitsRecord) =>
-                                          habitsRecord.where('user',
-                                              isEqualTo: currentUserReference),
-                                      limit: 4,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: SpinKitDoubleBounce(
-                                              color:
-                                                  FlutterFlowTheme.primaryColor,
-                                              size: 50,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      List<HabitsRecord>
-                                          columnHabitsRecordList =
-                                          snapshot.data;
-                                      // Customize what your widget looks like with no query results.
-                                      if (snapshot.data.isEmpty) {
-                                        return Container(
-                                          height: 100,
-                                          child: Center(
-                                            child: Text('No results.'),
-                                          ),
-                                        );
-                                      }
-                                      return SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: List.generate(
-                                              columnHabitsRecordList.length,
-                                              (columnIndex) {
-                                            final columnHabitsRecord =
-                                                columnHabitsRecordList[
-                                                    columnIndex];
-                                            return Row(
+                            Expanded(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color(0x27000000),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Color(0x32000000),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 10, 10, 0),
+                                            child: Row(
                                               mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
                                               children: [
-                                                Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  decoration: BoxDecoration(),
-                                                  child: Container(
-                                                    width: 120,
-                                                    height: 120,
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          'https://picsum.photos/seed/723/600',
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
                                                 Expanded(
-                                                  flex: 3,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(),
-                                                    child: ListView(
-                                                      padding: EdgeInsets.zero,
-                                                      shrinkWrap: true,
-                                                      scrollDirection:
-                                                          Axis.vertical,
-                                                      children: [
-                                                        ListTile(
-                                                          title: Text(
-                                                            columnHabitsRecord
-                                                                .name,
-                                                            style:
-                                                                FlutterFlowTheme
-                                                                    .title3
-                                                                    .override(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                            ),
-                                                          ),
-                                                          subtitle: Text(
-                                                            columnHabitsRecord
-                                                                .description,
-                                                            style:
-                                                                FlutterFlowTheme
-                                                                    .subtitle2
-                                                                    .override(
-                                                              fontFamily:
-                                                                  'Poppins',
-                                                            ),
-                                                          ),
-                                                          trailing: Icon(
-                                                            Icons
-                                                                .arrow_forward_ios,
-                                                            color: Color(
-                                                                0xFF303030),
-                                                            size: 20,
-                                                          ),
-                                                          tileColor:
-                                                              Color(0xFFF5F5F5),
-                                                          dense: false,
-                                                        )
-                                                      ],
+                                                  child: Text(
+                                                    'Deine Habits',
+                                                    textAlign: TextAlign.start,
+                                                    style: FlutterFlowTheme
+                                                        .title3
+                                                        .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: FlutterFlowTheme
+                                                          .tertiaryColor,
                                                     ),
                                                   ),
                                                 )
                                               ],
-                                            );
-                                          }),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 0, 10, 10),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    'All deine laufenden Habits',
+                                                    textAlign: TextAlign.start,
+                                                    style: FlutterFlowTheme
+                                                        .subtitle2
+                                                        .override(
+                                                      fontFamily: 'Poppins',
+                                                      color: Color(0x51000000),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      10, 10, 10, 10),
+                                                  child: StreamBuilder<
+                                                      List<HabitsRecord>>(
+                                                    stream: queryHabitsRecord(
+                                                      queryBuilder: (habitsRecord) =>
+                                                          habitsRecord.where(
+                                                              'user',
+                                                              isEqualTo:
+                                                                  currentUserReference),
+                                                      limit: 4,
+                                                    ),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      // Customize what your widget looks like when it's loading.
+                                                      if (!snapshot.hasData) {
+                                                        return Center(
+                                                          child: SizedBox(
+                                                            width: 50,
+                                                            height: 50,
+                                                            child:
+                                                                SpinKitDoubleBounce(
+                                                              color: FlutterFlowTheme
+                                                                  .primaryColor,
+                                                              size: 50,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                      List<HabitsRecord>
+                                                          columnHabitsRecordList =
+                                                          snapshot.data;
+                                                      // Customize what your widget looks like with no query results.
+                                                      if (snapshot
+                                                          .data.isEmpty) {
+                                                        return Container(
+                                                          height: 100,
+                                                          child: Center(
+                                                            child: Text(
+                                                                'No results.'),
+                                                          ),
+                                                        );
+                                                      }
+                                                      return SingleChildScrollView(
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          children: List.generate(
+                                                              columnHabitsRecordList
+                                                                  .length,
+                                                              (columnIndex) {
+                                                            final columnHabitsRecord =
+                                                                columnHabitsRecordList[
+                                                                    columnIndex];
+                                                            return Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .max,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  width: 50,
+                                                                  height: 50,
+                                                                  decoration:
+                                                                      BoxDecoration(),
+                                                                  child:
+                                                                      Container(
+                                                                    width: 120,
+                                                                    height: 120,
+                                                                    clipBehavior:
+                                                                        Clip.antiAlias,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                    ),
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          'https://picsum.photos/seed/723/600',
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  flex: 3,
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(),
+                                                                    child:
+                                                                        ListView(
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .zero,
+                                                                      shrinkWrap:
+                                                                          true,
+                                                                      scrollDirection:
+                                                                          Axis.vertical,
+                                                                      children: [
+                                                                        ListTile(
+                                                                          title:
+                                                                              Text(
+                                                                            columnHabitsRecord.name,
+                                                                            style:
+                                                                                FlutterFlowTheme.title3.override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: FlutterFlowTheme.tertiaryColor,
+                                                                            ),
+                                                                          ),
+                                                                          subtitle:
+                                                                              Text(
+                                                                            columnHabitsRecord.description,
+                                                                            style:
+                                                                                FlutterFlowTheme.subtitle2.override(
+                                                                              fontFamily: 'Poppins',
+                                                                              color: Color(0xFFD9D9D9),
+                                                                            ),
+                                                                          ),
+                                                                          trailing:
+                                                                              Icon(
+                                                                            Icons.arrow_forward_ios,
+                                                                            color:
+                                                                                FlutterFlowTheme.tertiaryColor,
+                                                                            size:
+                                                                                20,
+                                                                          ),
+                                                                          tileColor:
+                                                                              Color(0xFFF5F5F5),
+                                                                          dense:
+                                                                              false,
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            );
+                                                          }),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             )
                           ],
                         ),
