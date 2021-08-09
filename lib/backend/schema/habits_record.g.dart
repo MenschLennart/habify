@@ -70,6 +70,20 @@ class _$HabitsRecordSerializer implements StructuredSerializer<HabitsRecord> {
         ..add(serializers.serialize(value,
             specifiedType: const FullType(String)));
     }
+    value = object.pinned;
+    if (value != null) {
+      result
+        ..add('pinned')
+        ..add(
+            serializers.serialize(value, specifiedType: const FullType(bool)));
+    }
+    value = object.icon;
+    if (value != null) {
+      result
+        ..add('icon')
+        ..add(serializers.serialize(value,
+            specifiedType: const FullType(String)));
+    }
     value = object.reference;
     if (value != null) {
       result
@@ -122,6 +136,14 @@ class _$HabitsRecordSerializer implements StructuredSerializer<HabitsRecord> {
           result.type = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'pinned':
+          result.pinned = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'icon':
+          result.icon = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'Document__Reference__Field':
           result.reference = serializers.deserialize(value,
                   specifiedType: const FullType(
@@ -151,6 +173,10 @@ class _$HabitsRecord extends HabitsRecord {
   @override
   final String type;
   @override
+  final bool pinned;
+  @override
+  final String icon;
+  @override
   final DocumentReference<Object> reference;
 
   factory _$HabitsRecord([void Function(HabitsRecordBuilder) updates]) =>
@@ -164,6 +190,8 @@ class _$HabitsRecord extends HabitsRecord {
       this.dueDate,
       this.user,
       this.type,
+      this.pinned,
+      this.icon,
       this.reference})
       : super._();
 
@@ -185,6 +213,8 @@ class _$HabitsRecord extends HabitsRecord {
         dueDate == other.dueDate &&
         user == other.user &&
         type == other.type &&
+        pinned == other.pinned &&
+        icon == other.icon &&
         reference == other.reference;
   }
 
@@ -195,12 +225,18 @@ class _$HabitsRecord extends HabitsRecord {
             $jc(
                 $jc(
                     $jc(
-                        $jc($jc($jc(0, name.hashCode), createdAt.hashCode),
-                            editedAt.hashCode),
-                        description.hashCode),
-                    dueDate.hashCode),
-                user.hashCode),
-            type.hashCode),
+                        $jc(
+                            $jc(
+                                $jc(
+                                    $jc($jc(0, name.hashCode),
+                                        createdAt.hashCode),
+                                    editedAt.hashCode),
+                                description.hashCode),
+                            dueDate.hashCode),
+                        user.hashCode),
+                    type.hashCode),
+                pinned.hashCode),
+            icon.hashCode),
         reference.hashCode));
   }
 
@@ -214,6 +250,8 @@ class _$HabitsRecord extends HabitsRecord {
           ..add('dueDate', dueDate)
           ..add('user', user)
           ..add('type', type)
+          ..add('pinned', pinned)
+          ..add('icon', icon)
           ..add('reference', reference))
         .toString();
   }
@@ -251,6 +289,14 @@ class HabitsRecordBuilder
   String get type => _$this._type;
   set type(String type) => _$this._type = type;
 
+  bool _pinned;
+  bool get pinned => _$this._pinned;
+  set pinned(bool pinned) => _$this._pinned = pinned;
+
+  String _icon;
+  String get icon => _$this._icon;
+  set icon(String icon) => _$this._icon = icon;
+
   DocumentReference<Object> _reference;
   DocumentReference<Object> get reference => _$this._reference;
   set reference(DocumentReference<Object> reference) =>
@@ -270,6 +316,8 @@ class HabitsRecordBuilder
       _dueDate = $v.dueDate;
       _user = $v.user;
       _type = $v.type;
+      _pinned = $v.pinned;
+      _icon = $v.icon;
       _reference = $v.reference;
       _$v = null;
     }
@@ -298,6 +346,8 @@ class HabitsRecordBuilder
             dueDate: dueDate,
             user: user,
             type: type,
+            pinned: pinned,
+            icon: icon,
             reference: reference);
     replace(_$result);
     return _$result;

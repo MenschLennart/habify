@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
@@ -8,12 +9,9 @@ import '../flutter_flow/flutter_flow_drop_down_template.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AddHabitFormWidget extends StatefulWidget {
   AddHabitFormWidget({Key key}) : super(key: key);
@@ -24,10 +22,19 @@ class AddHabitFormWidget extends StatefulWidget {
 
 class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
   DateTime datePicked;
+  Icon _icon;
   String habitTypeValue;
   TextEditingController nameController;
   TextEditingController descriptionController;
   final formKey = GlobalKey<FormState>();
+
+  _pickIcon() async {
+    IconData icon = await FlutterIconPicker.showIconPicker(context,
+        iconPackMode: IconPack.fontAwesomeIcons);
+    setState(() {
+      _icon = Icon(icon);
+    });
+  }
 
   @override
   void initState() {
@@ -36,6 +43,9 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
     descriptionController = TextEditingController();
     nameController = TextEditingController();
     initializeDateFormatting('de_DE', null);
+    _icon = Icon(
+        FaIcon(FontAwesomeIcons.accusoft, color: FlutterFlowTheme.tertiaryColor)
+            .icon);
   }
 
   @override
@@ -73,30 +83,98 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                         padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
+                              flex: 3,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding:
+                                              EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                          decoration: BoxDecoration(),
+                                          child: FlutterFlowDropDown(
+                                            initialOption: 'Good',
+                                            options: ['Good', 'Bad'],
+                                            onChanged: (value) {
+                                              setState(
+                                                  () => habitTypeValue = value);
+                                            },
+                                            width: 150,
+                                            height: 50,
+                                            textStyle: FlutterFlowTheme
+                                                .bodyText2
+                                                .override(
+                                              fontFamily: 'Montserrat',
+                                              color: Color(0xFFEFEFEF),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            fillColor: Color(0x26FFFFFF),
+                                            elevation: 2,
+                                            borderColor: Color(0x59FFFFFF),
+                                            borderWidth: 0,
+                                            borderRadius: 8,
+                                            margin: EdgeInsets.fromLTRB(
+                                                15, 0, 5, 2),
+                                            hidesUnderline: true,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Expanded(
                               flex: 2,
-                              child: FlutterFlowDropDown(
-                                initialOption: 'Good',
-                                options: ['Good', 'Bad'],
-                                onChanged: (value) {
-                                  setState(() => habitTypeValue = value);
-                                },
-                                width: 150,
-                                height: 50,
-                                textStyle: FlutterFlowTheme.bodyText2.override(
-                                  fontFamily: 'Montserrat',
-                                  color: Color(0xFFEFEFEF),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                fillColor: Color(0x26FFFFFF),
-                                elevation: 2,
-                                borderColor: Color(0x59FFFFFF),
-                                borderWidth: 0,
-                                borderRadius: 8,
-                                margin: EdgeInsets.fromLTRB(15, 0, 5, 2),
-                                hidesUnderline: true,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          width: 100,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: Color(0x26FFFFFF),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                              color: Color(0x59FFFFFF),
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              AnimatedSwitcher(
+                                                duration:
+                                                    Duration(milliseconds: 300),
+                                                child: IconButton(
+                                                  onPressed: () => _pickIcon(),
+                                                  icon: _icon,
+                                                  iconSize: 32,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
                             )
                           ],

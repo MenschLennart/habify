@@ -35,6 +35,12 @@ abstract class HabitsRecord
   String get type;
 
   @nullable
+  bool get pinned;
+
+  @nullable
+  String get icon;
+
+  @nullable
   @BuiltValueField(wireName: kDocumentReferenceField)
   DocumentReference get reference;
 
@@ -42,7 +48,9 @@ abstract class HabitsRecord
     ..name = ''
     ..description = ''
     ..dueDate = ''
-    ..type = '';
+    ..type = ''
+    ..pinned = false
+    ..icon = '';
 
   static CollectionReference get collection =>
       FirebaseFirestore.instance.collection('habits');
@@ -69,6 +77,8 @@ Map<String, dynamic> createHabitsRecordData({
   String dueDate,
   DocumentReference user,
   String type,
+  bool pinned,
+  String icon,
 }) =>
     serializers.toFirestore(
         HabitsRecord.serializer,
@@ -79,4 +89,6 @@ Map<String, dynamic> createHabitsRecordData({
           ..description = description
           ..dueDate = dueDate
           ..user = user
-          ..type = type));
+          ..type = type
+          ..pinned = pinned
+          ..icon = icon));
