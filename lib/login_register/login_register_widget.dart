@@ -1,3 +1,5 @@
+import 'package:flutter_svg/svg.dart';
+
 import '../auth/auth_util.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
@@ -422,9 +424,9 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: Image.asset(
-                                                'assets/images/social_Apple.svg',
-                                              ),
+                                              child: SvgPicture.asset(
+                                                  'assets/images/apple_logo.svg',
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
@@ -822,9 +824,9 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                               ),
-                                              child: Image.asset(
-                                                'assets/images/social_Apple.svg',
-                                              ),
+                                              child: SvgPicture.asset(
+                                                  'assets/images/apple_logo.svg',
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
