@@ -2,13 +2,10 @@ import 'package:flutter_svg/svg.dart';
 
 import '../auth/auth_util.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
 import '../main.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginRegisterWidget extends StatefulWidget {
   LoginRegisterWidget({Key key}) : super(key: key);

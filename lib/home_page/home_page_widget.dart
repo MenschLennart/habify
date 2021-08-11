@@ -4,10 +4,9 @@ import '../backend/backend.dart';
 import '../components/habits_overview_widget_widget.dart';
 import '../components/pinned_habit_widget_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
+import '../extensions/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomePageWidget extends StatefulWidget {
   HomePageWidget({Key key}) : super(key: key);
@@ -24,7 +23,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.secondaryColor,
+        backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: false,
         title: Text(
           'Übersicht',
@@ -78,12 +77,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         centerTitle: true,
         elevation: 4,
       ),
-      backgroundColor: FlutterFlowTheme.secondaryColor,
+      backgroundColor: FlutterFlowTheme.backgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print('FloatingActionButton pressed ...');
-        },
-        backgroundColor: FlutterFlowTheme.secondaryColor,
+        onPressed: () => {},
+        backgroundColor: FlutterFlowTheme.primaryColor,
         elevation: 8,
         child: IconButton(
           onPressed: () async {
@@ -96,7 +93,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           },
           icon: Icon(
             Icons.add,
-            color: FlutterFlowTheme.tertiaryColor,
+            color: Colors.white,
             size: 28,
           ),
           iconSize: 28,
@@ -108,17 +105,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           children: [
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      FlutterFlowTheme.primaryColor,
-                      FlutterFlowTheme.secondaryColor
-                    ],
-                    stops: [0, 1],
-                    begin: Alignment(0, 1),
-                    end: Alignment(0, -1),
-                  ),
-                ),
+                color: FlutterFlowTheme.backgroundColor,
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -136,7 +123,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     .where('user',
                                         isEqualTo: currentUserReference)
                                     .where('pinned', isEqualTo: true),
-                                limit: 2,
+                                limit: 4,
                               ),
                               builder: (context, snapshot) {
                                 // Customize what your widget looks like when it's loading.
@@ -163,31 +150,28 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     ),
                                   );
                                 }
-                                return Row(
+                                return Column(
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: List.generate(
                                       rowHabitsRecordList.length, (rowIndex) {
                                     final rowHabitsRecord =
                                         rowHabitsRecordList[rowIndex];
-                                    return Expanded(
-                                      child: PinnedHabitWidgetWidget(
-                                        habitRecord: rowHabitsRecord,
-                                      ),
+                                    return PinnedHabitWidgetWidget(
+                                      habitRecord: rowHabitsRecord,
                                     );
                                   }),
                                 );
                               },
                             ),
                             Divider(
-                              height: 35,
-                              thickness: 1,
-                              indent: 10,
-                              endIndent: 10,
-                              color: FlutterFlowTheme.primaryColor,
-                            ),
+                                height: 35,
+                                thickness: 1,
+                                indent: 50,
+                                endIndent: 50,
+                                color:
+                                    FlutterFlowTheme.backgroundColor.darken(5)),
                             Expanded(
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,

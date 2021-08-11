@@ -1,11 +1,10 @@
 import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+import '../extensions/color.dart';
 
 class HabitsOverviewWidgetWidget extends StatefulWidget {
   HabitsOverviewWidgetWidget({Key key}) : super(key: key);
@@ -21,10 +20,10 @@ class _HabitsOverviewWidgetWidgetState
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0x27000000),
+        color: FlutterFlowTheme.backgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: Color(0x32000000),
+          color: FlutterFlowTheme.backgroundColor.darken(7),
         ),
       ),
       child: Column(
@@ -41,7 +40,7 @@ class _HabitsOverviewWidgetWidgetState
                     textAlign: TextAlign.start,
                     style: FlutterFlowTheme.title3.override(
                       fontFamily: 'Montserrat',
-                      color: FlutterFlowTheme.tertiaryColor,
+                      color: FlutterFlowTheme.primaryColor,
                     ),
                   ),
                 )
@@ -59,8 +58,8 @@ class _HabitsOverviewWidgetWidgetState
                     textAlign: TextAlign.start,
                     style: FlutterFlowTheme.subtitle2.override(
                       fontFamily: 'Montserrat',
-                      color: FlutterFlowTheme.tertiaryColor,
-                      fontSize: 14,
+                      color: FlutterFlowTheme.primaryColor.darken(50),
+                      fontSize: 15,
                       fontWeight: FontWeight.normal,
                     ),
                   ),

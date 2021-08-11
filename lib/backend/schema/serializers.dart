@@ -1,4 +1,5 @@
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:flutter/widgets.dart' hide Builder;
 
 import 'habits_record.dart';
 import 'users_record.dart';

@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'auth/firebase_user_provider.dart';
+import 'package:habify/home_page/home_page_widget.dart';
 import 'package:habify/login_register/login_register_widget.dart';
+import 'auth/firebase_user_provider.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'home_page/home_page_widget.dart';
 import 'profile_page/profile_page_widget.dart';
 
 void main() async {
@@ -85,30 +85,39 @@ class _NavBarPageState extends State<NavBarPage> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home_rounded,
-              color: Color(0xFF9E9E9E),
-              size: 28,
+              color: FlutterFlowTheme.tertiaryColor,
+              size: 32,
+            ),
+            activeIcon: Icon(
+              Icons.home_rounded,
+              color: Color(0x73000000),
+              size: 32,
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.person,
-              color: Color(0xFF9E9E9E),
-              size: 24,
+              color: FlutterFlowTheme.tertiaryColor,
+              size: 32,
+            ),
+            activeIcon: Icon(
+              Icons.person,
+              color: Color(0x73000000),
+              size: 32,
             ),
             label: 'Profile',
           )
         ],
-        backgroundColor: FlutterFlowTheme.tertiaryColor,
+        backgroundColor: FlutterFlowTheme.primaryColor,
         currentIndex: tabs.keys.toList().indexOf(_currentPage),
         selectedItemColor: FlutterFlowTheme.primaryColor,
-        unselectedItemColor: Color(0xFFBABABA),
-        onTap: (i) => setState(() => _currentPage = tabs.keys.toList()[i]),
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        // Temporary fix for https://github.com/flutter/flutter/issues/84556
-        selectedLabelStyle: const TextStyle(fontSize: 0.001),
-        unselectedLabelStyle: const TextStyle(fontSize: 0.001),
+        unselectedItemColor: FlutterFlowTheme.secondaryColor,
+        onTap: (i) => setState(() {
+          _currentPage = tabs.keys.toList()[i];
+        }),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
       ),
     );

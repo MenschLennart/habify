@@ -1,9 +1,6 @@
 import '../components/add_habit_form_widget.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AddHabitWidget extends StatefulWidget {
   AddHabitWidget({
@@ -25,7 +22,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
         title: Container(
           decoration: BoxDecoration(),
@@ -39,10 +36,9 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
         ),
         actions: [],
         centerTitle: true,
-        elevation: 4,
       ),
-      backgroundColor: FlutterFlowTheme.secondaryColor,
       body: AddHabitFormWidget(),
+      backgroundColor: FlutterFlowTheme.backgroundColor,
     );
   }
 }

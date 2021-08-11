@@ -1,21 +1,21 @@
 import 'dart:async';
+import 'dart:ui';
+
 import 'package:duration/duration.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../backend/backend.dart';
+import '../extensions/color.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class PinnedHabitWidgetWidget extends StatefulWidget {
+  final HabitsRecord habitRecord;
+
   PinnedHabitWidgetWidget({
     Key key,
     this.habitRecord,
   }) : super(key: key);
-
-  final HabitsRecord habitRecord;
 
   @override
   _PinnedHabitWidgetWidgetState createState() =>
@@ -26,19 +26,30 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
   Timer _timer;
   String _habitTimeDuration;
   DateTime _habitDateTime;
+  Icon _icon;
 
-  String _habitTimeToDuration(DateTime habitDateTime, DurationTersity tersity) {
-    Duration difference = DateTime.now().difference(habitDateTime);
-    return printDuration(aMinute * difference.inMinutes, tersity: tersity);
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
   void initState() {
+    super.initState();
     _habitDateTime = widget.habitRecord.createdAt;
     _updateHabitDuration();
     _timer = new Timer.periodic(
         Duration(minutes: 1), (Timer timer) => _updateHabitDuration());
-    super.initState();
+    widget.habitRecord.iconCodePoint == null
+        ? _icon = Icon(Icons.ac_unit)
+        : _icon = Icon(IconData(widget.habitRecord.iconCodePoint,
+            fontFamily: 'FontAwesomeIcons'));
+  }
+
+  String _habitTimeToDuration(DateTime habitDateTime, DurationTersity tersity) {
+    Duration difference = DateTime.now().difference(habitDateTime);
+    return printDuration(aMinute * difference.inMinutes, tersity: tersity);
   }
 
   void _updateHabitDuration() {
@@ -49,110 +60,91 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
   }
 
   @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-      child: Container(
-        width: 200,
-        height: 150,
-        decoration: BoxDecoration(
-          color: Color(0x27000000),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: Color(0x32000000),
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-          child: Column(
+      padding: const EdgeInsets.only(top: 15),
+      child: Column(
+        children: [
+          Column(
             mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: AutoSizeText(
-                      widget.habitRecord.name,
-                      style: FlutterFlowTheme.subtitle2.override(
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    _habitTimeDuration,
-                    style: FlutterFlowTheme.bodyText1.override(
-                      fontFamily: 'Manrope',
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    widget.habitRecord.createdAt.toString(),
-                    style: FlutterFlowTheme.bodyText1.override(
-                      fontFamily: 'Manrope',
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    widget.habitRecord.createdAt
-                        .difference(DateTime.now())
-                        .inMinutes
-                        .toString(),
-                    style: FlutterFlowTheme.bodyText1.override(
-                      fontFamily: 'Manrope',
-                    ),
-                  )
-                ],
-              ),
-              Expanded(
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 35,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.transparent, Color(0x32000000)],
-                            stops: [0.65, 0.65],
-                            begin: Alignment(1, 0),
-                            end: Alignment(-1, 0),
-                          ),
-                          borderRadius: BorderRadius.circular(2),
-                          shape: BoxShape.rectangle,
-                          border: Border.all(
-                            color: Color(0x73000000),
-                            width: 1,
-                          ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 150,
+                decoration: BoxDecoration(
+                  color: FlutterFlowTheme.backgroundColor,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: FlutterFlowTheme.backgroundColor.darken(5),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(_icon.icon,
+                                color: FlutterFlowTheme.primaryColor),
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.habitRecord.name,
+                              style: FlutterFlowTheme.subtitle2.override(
+                                fontFamily: 'Montserrat',
+                                color: FlutterFlowTheme.primaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              _habitTimeDuration,
+                              style: FlutterFlowTheme.bodyText1.override(
+                                fontFamily: 'Manrope',
+                                color: FlutterFlowTheme.primaryColor.darken(5),
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              DateFormat.yMMMMd()
+                                  .format(widget.habitRecord.createdAt),
+                              style: FlutterFlowTheme.bodyText1.override(
+                                fontFamily: 'Manrope',
+                              ),
+                            ),
+                            Text(
+                              widget.habitRecord.createdAt
+                                  .difference(DateTime.now())
+                                  .inMinutes
+                                  .toString(),
+                              style: FlutterFlowTheme.bodyText1.override(
+                                fontFamily: 'Manrope',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              )
+              ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

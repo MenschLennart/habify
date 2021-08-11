@@ -12,6 +12,7 @@ import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../extensions/color.dart';
 
 class AddHabitFormWidget extends StatefulWidget {
   AddHabitFormWidget({Key key}) : super(key: key);
@@ -28,9 +29,21 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
   TextEditingController descriptionController;
   final formKey = GlobalKey<FormState>();
 
+  Color _inputFieldColor = FlutterFlowTheme.primaryColor.lighten(95);
+  Color _inputFieldBorderColor = FlutterFlowTheme.primaryColor.lighten(90);
+  Color _inputFieldTextColor = FlutterFlowTheme.inputTextColor;
+
   _pickIcon() async {
     IconData icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.fontAwesomeIcons);
+        iconPackMode: IconPack.fontAwesomeIcons,
+        iconColor: FlutterFlowTheme.primaryColor,
+        title: Text('Icon auswählen...'),
+        searchHintText: 'Suchen...',
+        noResultsText: 'Leider nichts gefunden...',
+        closeChild: Icon(
+          FaIcon(FontAwesomeIcons.timesCircle).icon,
+          color: FlutterFlowTheme.primaryColor,
+        ));
     setState(() {
       _icon = Icon(icon);
     });
@@ -44,7 +57,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
     nameController = TextEditingController();
     initializeDateFormatting('de_DE', null);
     _icon = Icon(
-        FaIcon(FontAwesomeIcons.accusoft, color: FlutterFlowTheme.tertiaryColor)
+        FaIcon(FontAwesomeIcons.accusoft, color: FlutterFlowTheme.primaryColor)
             .icon);
   }
 
@@ -63,17 +76,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
               child: Container(
                 width: 100,
                 height: 100,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      FlutterFlowTheme.secondaryColor,
-                      FlutterFlowTheme.primaryColor
-                    ],
-                    stops: [0, 0.7],
-                    begin: Alignment(0, -1),
-                    end: Alignment(0, 1),
-                  ),
-                ),
+                color: FlutterFlowTheme.backgroundColor,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Column(
@@ -111,13 +114,13 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                                 .bodyText2
                                                 .override(
                                               fontFamily: 'Montserrat',
-                                              color: Color(0xFFEFEFEF),
+                                              color: _inputFieldTextColor,
                                               fontSize: 16,
                                               fontWeight: FontWeight.normal,
                                             ),
-                                            fillColor: Color(0x26FFFFFF),
+                                            fillColor: _inputFieldColor,
                                             elevation: 2,
-                                            borderColor: Color(0x59FFFFFF),
+                                            borderColor: _inputFieldBorderColor,
                                             borderWidth: 0,
                                             borderRadius: 8,
                                             margin: EdgeInsets.fromLTRB(
@@ -144,11 +147,11 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                           width: 100,
                                           height: 50,
                                           decoration: BoxDecoration(
-                                            color: Color(0x26FFFFFF),
+                                            color: _inputFieldColor,
                                             borderRadius:
                                                 BorderRadius.circular(8),
                                             border: Border.all(
-                                              color: Color(0x59FFFFFF),
+                                              color: _inputFieldBorderColor,
                                               width: 1,
                                             ),
                                           ),
@@ -165,7 +168,8 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                                   onPressed: () => _pickIcon(),
                                                   icon: _icon,
                                                   iconSize: 32,
-                                                  color: Colors.white,
+                                                  color: FlutterFlowTheme
+                                                      .primaryColor,
                                                 ),
                                               ),
                                             ],
@@ -190,10 +194,10 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                 width: 330,
                                 height: 50,
                                 decoration: BoxDecoration(
-                                  color: Color(0x26FFFFFF),
+                                  color: _inputFieldColor,
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Color(0x59FFFFFF),
+                                    color: _inputFieldBorderColor,
                                     width: 1,
                                   ),
                                 ),
@@ -207,13 +211,13 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       labelStyle:
                                           FlutterFlowTheme.bodyText2.override(
                                         fontFamily: 'Montserrat',
-                                        color: Color(0xFFEFEFEF),
+                                        color: _inputFieldTextColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
                                       ),
                                       enabledBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color(0x00000000),
+                                          color: _inputFieldBorderColor,
                                           width: 1,
                                         ),
                                         borderRadius: const BorderRadius.only(
@@ -223,7 +227,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       ),
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color(0x00000000),
+                                          color: _inputFieldBorderColor,
                                           width: 1,
                                         ),
                                         borderRadius: const BorderRadius.only(
@@ -234,7 +238,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                     ),
                                     style: FlutterFlowTheme.bodyText2.override(
                                       fontFamily: 'Montserrat',
-                                      color: Color(0xFFEFEFEF),
+                                      color: _inputFieldTextColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -269,10 +273,10 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                 width: 330,
                                 height: 100,
                                 decoration: BoxDecoration(
-                                  color: Color(0x26FFFFFF),
+                                  color: _inputFieldColor,
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Color(0x59FFFFFF),
+                                    color: _inputFieldBorderColor,
                                   ),
                                 ),
                                 child: Padding(
@@ -285,7 +289,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       labelStyle:
                                           FlutterFlowTheme.bodyText2.override(
                                         fontFamily: 'Montserrat',
-                                        color: Color(0xFFEFEFEF),
+                                        color: _inputFieldTextColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -294,23 +298,14 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       hintStyle:
                                           FlutterFlowTheme.bodyText2.override(
                                         fontFamily: 'Montserrat',
-                                        color: Color(0xFFEFEFEF),
+                                        color: _inputFieldTextColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.normal,
                                       ),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0x00000000),
-                                          width: 1,
-                                        ),
-                                        borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(4.0),
-                                          topRight: Radius.circular(4.0),
-                                        ),
-                                      ),
+                                      enabledBorder: InputBorder.none,
                                       focusedBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
-                                          color: Color(0x00000000),
+                                          color: _inputFieldTextColor,
                                           width: 1,
                                         ),
                                         borderRadius: const BorderRadius.only(
@@ -321,7 +316,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                     ),
                                     style: FlutterFlowTheme.bodyText2.override(
                                       fontFamily: 'Montserrat',
-                                      color: Color(0xFFEFEFEF),
+                                      color: _inputFieldTextColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -349,10 +344,10 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                         padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Color(0x26FFFFFF),
+                            color: _inputFieldColor,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: Color(0x59FFFFFF),
+                              color: _inputFieldBorderColor,
                             ),
                           ),
                           child: Row(
@@ -370,17 +365,17 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                   },
                                   icon: FaIcon(
                                     FontAwesomeIcons.solidCalendarAlt,
-                                    color: Color(0xFFEFEFEF),
-                                    size: 30,
+                                    color: FlutterFlowTheme.primaryColor,
+                                    size: 32,
                                   ),
-                                  iconSize: 30,
+                                  iconSize: 32,
                                 ),
                               ),
                               Text(
                                 DateFormat.yMMMMd('de_DE').format(datePicked),
                                 style: FlutterFlowTheme.bodyText1.override(
                                   fontFamily: 'Manrope',
-                                  color: FlutterFlowTheme.tertiaryColor,
+                                  color: _inputFieldTextColor,
                                 ),
                               )
                             ],
@@ -403,17 +398,17 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                 options: FFButtonOptions(
                                   width: 140,
                                   height: 60,
-                                  color: Color(0x26FFFFFF),
+                                  color: _inputFieldColor,
                                   textStyle:
                                       FlutterFlowTheme.subtitle2.override(
                                     fontFamily: 'Montserrat',
-                                    color: Color(0xFFEFEFEF),
+                                    color: _inputFieldTextColor,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   elevation: 2,
                                   borderSide: BorderSide(
-                                    color: Color(0x59FFFFFF),
+                                    color: _inputFieldBorderColor,
                                     width: 1,
                                   ),
                                   borderRadius: 8,
@@ -440,6 +435,8 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                         dateTimeFormat('MMMMEEEEd', datePicked),
                                     user: currentUserReference,
                                     type: habitTypeValue,
+                                    pinned: false,
+                                    iconCodePoint: _icon.icon.codePoint,
                                   );
                                   await HabitsRecord.collection
                                       .doc()
@@ -454,17 +451,17 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                 options: FFButtonOptions(
                                   width: 140,
                                   height: 60,
-                                  color: Color(0xFFEFEFEF),
+                                  color: FlutterFlowTheme.primaryColor,
                                   textStyle:
                                       FlutterFlowTheme.subtitle2.override(
                                     fontFamily: 'Montserrat',
-                                    color: FlutterFlowTheme.secondaryColor,
+                                    color: _inputFieldTextColor,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   elevation: 2,
                                   borderSide: BorderSide(
-                                    color: Color(0x59FFFFFF),
+                                    color: _inputFieldBorderColor,
                                     width: 1,
                                   ),
                                   borderRadius: 8,
