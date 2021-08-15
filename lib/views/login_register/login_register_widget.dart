@@ -1,41 +1,31 @@
+import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../auth/auth_util.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../main.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+import 'package:habify/flutter_flow/flutter_flow_widgets.dart';
+import 'package:habify/main.dart';
 import 'package:flutter/material.dart';
 
 class LoginRegisterWidget extends StatefulWidget {
-  LoginRegisterWidget({Key key}) : super(key: key);
+  LoginRegisterWidget({Key? key}) : super(key: key);
 
   @override
   _LoginRegisterWidgetState createState() => _LoginRegisterWidgetState();
 }
 
 class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
-  TextEditingController confirmPasswordController;
-  bool confirmPasswordVisibility;
-  TextEditingController createEmailController;
-  TextEditingController createPasswordController;
-  bool createPasswordVisibility;
-  TextEditingController loginEmailAddressController;
-  TextEditingController loginPasswordController;
-  bool loginPasswordVisibility;
+  TextEditingController confirmPasswordController = TextEditingController();
+  bool confirmPasswordVisibility = false;
+  TextEditingController createEmailController = TextEditingController();
+  TextEditingController createPasswordController = TextEditingController();
+  bool createPasswordVisibility = false;
+  TextEditingController loginEmailAddressController = TextEditingController();
+  TextEditingController loginPasswordController = TextEditingController();
+  bool loginPasswordVisibility = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    confirmPasswordController = TextEditingController();
-    confirmPasswordVisibility = false;
-    createEmailController = TextEditingController();
-    createPasswordController = TextEditingController();
-    createPasswordVisibility = false;
-    loginEmailAddressController = TextEditingController();
-    loginPasswordController = TextEditingController();
-    loginPasswordVisibility = false;
   }
 
   @override
@@ -290,23 +280,31 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                   padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
-                                      final user = await signInWithEmail(
-                                        context,
-                                        loginEmailAddressController.text,
-                                        loginPasswordController.text,
-                                      );
-                                      if (user == null) {
-                                        return;
-                                      }
-
-                                      await Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => NavBarPage(
-                                              initialPage: 'HomePage'),
-                                        ),
-                                        (r) => false,
-                                      );
+                                      Backendless.userService
+                                          .login(
+                                              loginEmailAddressController.text,
+                                              loginPasswordController.text,
+                                              true)
+                                          .then((user) {
+                                        Backendless.userService
+                                            .isValidLogin()
+                                            .then((response) async {
+                                          if (response != null) {
+                                            await Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    NavBarPage(
+                                                        initialPage:
+                                                            'HomePage'),
+                                              ),
+                                              (r) => false,
+                                            );
+                                          } else {
+                                            return;
+                                          }
+                                        });
+                                      });
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(
@@ -354,7 +352,7 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                  child: AutoSizeText(
+                                  child: Text(
                                     'OR',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.title2.override(
@@ -365,7 +363,7 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                  child: AutoSizeText(
+                                  child: Text(
                                     'Use a Social Platform to Login',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.bodyText2.override(
@@ -395,25 +393,7 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                           padding:
                                               EdgeInsets.fromLTRB(2, 2, 2, 2),
                                           child: InkWell(
-                                            onTap: () async {
-                                              final user =
-                                                  await signInWithApple(
-                                                      context);
-                                              if (user == null) {
-                                                return;
-                                              }
-                                              await Navigator
-                                                  .pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NavBarPage(
-                                                          initialPage:
-                                                              'HomePage'),
-                                                ),
-                                                (r) => false,
-                                              );
-                                            },
+                                            onTap: () async {},
                                             child: Container(
                                               width: 50,
                                               height: 50,
@@ -717,23 +697,25 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                         return;
                                       }
 
-                                      final user = await createAccountWithEmail(
-                                        context,
-                                        createEmailController.text,
-                                        createPasswordController.text,
-                                      );
-                                      if (user == null) {
-                                        return;
-                                      }
+                                      BackendlessUser user = BackendlessUser()
+                                        ..email = createEmailController.text
+                                        ..password =
+                                            createPasswordController.text;
 
-                                      await Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => NavBarPage(
-                                              initialPage: 'HomePage'),
-                                        ),
-                                        (r) => false,
-                                      );
+                                      Backendless.userService
+                                          .register(user)
+                                          .onError((error, stackTrace) {
+                                        return;
+                                      }).then((value) async {
+                                        await Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => NavBarPage(
+                                                initialPage: 'HomePage'),
+                                          ),
+                                          (r) => false,
+                                        );
+                                      });
                                     },
                                     text: 'Create Account',
                                     options: FFButtonOptions(
@@ -756,7 +738,7 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                                  child: AutoSizeText(
+                                  child: Text(
                                     'OR',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.title2.override(
@@ -767,7 +749,7 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
-                                  child: AutoSizeText(
+                                  child: Text(
                                     'Use a Social Platform to Create Account',
                                     textAlign: TextAlign.center,
                                     style: FlutterFlowTheme.bodyText2.override(
@@ -795,36 +777,14 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                           padding:
                                               EdgeInsets.fromLTRB(2, 2, 2, 2),
                                           child: InkWell(
-                                            onTap: () async {
-                                              final user =
-                                                  await signInWithApple(
-                                                      context);
-                                              if (user == null) {
-                                                return;
-                                              }
-                                              await Navigator
-                                                  .pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NavBarPage(
-                                                          initialPage:
-                                                              'HomePage'),
-                                                ),
-                                                (r) => false,
-                                              );
-                                            },
+                                            onTap: () async {},
                                             child: Container(
-                                              width: 50,
-                                              height: 50,
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: SvgPicture.asset(
-                                                  'assets/images/apple_logo.svg',
-                                                  color: Colors.white),
-                                            ),
+                                                width: 50,
+                                                height: 50,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                )),
                                           ),
                                         ),
                                       )

@@ -1,14 +1,12 @@
-import '../auth/auth_util.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
-import '../login_register/login_register_widget.dart';
+import 'package:backendless_sdk/backendless_sdk.dart';
+
+import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+import 'package:habify/flutter_flow/flutter_flow_widgets.dart';
+import 'package:habify/views/login_register/login_register_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePageWidget extends StatefulWidget {
-  ProfilePageWidget({Key key}) : super(key: key);
+  ProfilePageWidget({Key? key}) : super(key: key);
 
   @override
   _ProfilePageWidgetState createState() => _ProfilePageWidgetState();
@@ -296,7 +294,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            await signOut();
+                            await Backendless.userService.logout();
                             await Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(

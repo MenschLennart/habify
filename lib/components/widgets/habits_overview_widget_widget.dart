@@ -1,21 +1,25 @@
-import '../auth/auth_util.dart';
-import '../backend/backend.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import 'package:habify/entities/habit.dart';
+
+import 'package:habify/flutter_flow/flutter_flow_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../extensions/color.dart';
+import 'package:habify/extensions/color.dart';
 
-class HabitsOverviewWidgetWidget extends StatefulWidget {
-  HabitsOverviewWidgetWidget({Key key}) : super(key: key);
+class HabitsOverviewWidget extends StatefulWidget {
+  final List<Habit> habitList;
+
+  HabitsOverviewWidget({Key? key, required this.habitList}) : super(key: key);
 
   @override
-  _HabitsOverviewWidgetWidgetState createState() =>
-      _HabitsOverviewWidgetWidgetState();
+  _HabitsOverviewWidgetState createState() => _HabitsOverviewWidgetState();
 }
 
-class _HabitsOverviewWidgetWidgetState
-    extends State<HabitsOverviewWidgetWidget> {
+class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -74,43 +78,14 @@ class _HabitsOverviewWidgetWidgetState
                 flex: 1,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: StreamBuilder<List<HabitsRecord>>(
-                    stream: queryHabitsRecord(
-                      queryBuilder: (habitsRecord) => habitsRecord.where('user',
-                          isEqualTo: currentUserReference),
-                      limit: 4,
-                    ),
-                    builder: (context, snapshot) {
-                      // Customize what your widget looks like when it's loading.
-                      if (!snapshot.hasData) {
-                        return Center(
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: SpinKitDoubleBounce(
-                              color: FlutterFlowTheme.primaryColor,
-                              size: 50,
-                            ),
-                          ),
-                        );
-                      }
-                      List<HabitsRecord> columnHabitsRecordList = snapshot.data;
-                      // Customize what your widget looks like with no query results.
-                      if (snapshot.data.isEmpty) {
-                        return Container(
-                          height: 100,
-                          child: Center(
-                            child: Text('No results.'),
-                          ),
-                        );
-                      }
-                      return SingleChildScrollView(
+                  child: Row(
+                    children: [
+                      SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
-                          children: List.generate(columnHabitsRecordList.length,
-                              (columnIndex) {
-                            final columnHabitsRecord =
-                                columnHabitsRecordList[columnIndex];
+                          children:
+                              List.generate(widget.habitList.length, (index) {
+                            final habit = widget.habitList[index];
                             return Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -144,7 +119,7 @@ class _HabitsOverviewWidgetWidgetState
                                       children: [
                                         ListTile(
                                           title: Text(
-                                            columnHabitsRecord.name,
+                                            habit.title!,
                                             style: FlutterFlowTheme.title3
                                                 .override(
                                               fontFamily: 'Montserrat',
@@ -153,7 +128,7 @@ class _HabitsOverviewWidgetWidgetState
                                             ),
                                           ),
                                           subtitle: Text(
-                                            columnHabitsRecord.description,
+                                            habit.description!,
                                             style: FlutterFlowTheme.subtitle2
                                                 .override(
                                               fontFamily: 'Montserrat',
@@ -177,8 +152,8 @@ class _HabitsOverviewWidgetWidgetState
                             );
                           }),
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
               )

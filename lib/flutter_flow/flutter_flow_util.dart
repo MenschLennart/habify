@@ -30,10 +30,10 @@ bool get isIos => Platform.isIOS;
 Future<LatLng> get getCurrentUserLocation =>
     queryCurrentUserLocation().onError((error, _) {
       print("Error querying user location: $error");
-      return null;
-    });
+      throw Exception(error);
+    }).then((value) => value!);
 
-Future<LatLng> queryCurrentUserLocation() async {
+Future<LatLng?> queryCurrentUserLocation() async {
   final serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     return Future.error('Location services are disabled.');
@@ -53,7 +53,7 @@ Future<LatLng> queryCurrentUserLocation() async {
   }
 
   final position = await Geolocator.getCurrentPosition();
-  return position != null && position.latitude != 0 && position.longitude != 0
+  return position.latitude != 0 && position.longitude != 0
       ? LatLng(position.latitude, position.longitude)
       : null;
 }

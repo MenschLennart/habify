@@ -1,15 +1,14 @@
-import '../add_habit/add_habit_widget.dart';
-import '../auth/auth_util.dart';
-import '../backend/backend.dart';
-import '../components/habits_overview_widget_widget.dart';
-import '../components/pinned_habit_widget_widget.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../extensions/color.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:habify/backend/services/backendless/backendless.dart';
+import 'package:habify/entities/habit.dart';
+import 'package:habify/views/add_habit/add_habit_widget.dart';
+import 'package:habify/components/widgets/pinned_habit_widget_widget.dart';
+import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+import 'package:habify/extensions/color.dart';
+import 'package:flutter/material.dart';
 
 class HomePageWidget extends StatefulWidget {
-  HomePageWidget({Key key}) : super(key: key);
+  HomePageWidget({Key? key}) : super(key: key);
 
   @override
   _HomePageWidgetState createState() => _HomePageWidgetState();
@@ -17,6 +16,62 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<Map?>? _habits;
+  bool _isLoading = true;
+
+  Future<List<Map?>?> createHabitList() async {
+    String? objectId = BackendlessService.repository.getCurrentUser()?.objectId;
+    List<Map?>? habits = await BackendlessService.repository
+        .queryWhere("ownerId = '$objectId'", "Habit");
+
+    return habits;
+  }
+
+  updateHabits() async {
+    _isLoading = true;
+    _habits = await createHabitList();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateHabits();
+  }
+
+  createPinnedHabits() {
+    // Customize what your widget looks like when it's loading.
+    if (_isLoading == true) {
+      return Center(
+        child: SizedBox(
+          width: 50,
+          height: 50,
+          child: SpinKitDoubleBounce(
+            color: FlutterFlowTheme.primaryColor,
+            size: 50,
+          ),
+        ),
+      );
+    }
+
+    if (_habits!.isEmpty) {
+      return Center(
+        child: Text('Nothing found.'),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: List.generate(_habits!.length, (index) {
+        return PinnedHabitWidget(habit: Habit.fromJSON(_habits![index]!));
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +139,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         elevation: 8,
         child: IconButton(
           onPressed: () async {
-            await Navigator.push(
+            final result = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => AddHabitWidget(),
               ),
             );
+
+            if (result == true) updateHabits();
           },
           icon: Icon(
             Icons.add,
@@ -117,54 +174,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            StreamBuilder<List<HabitsRecord>>(
-                              stream: queryHabitsRecord(
-                                queryBuilder: (habitsRecord) => habitsRecord
-                                    .where('user',
-                                        isEqualTo: currentUserReference)
-                                    .where('pinned', isEqualTo: true),
-                                limit: 4,
-                              ),
-                              builder: (context, snapshot) {
-                                // Customize what your widget looks like when it's loading.
-                                if (!snapshot.hasData) {
-                                  return Center(
-                                    child: SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                      child: SpinKitDoubleBounce(
-                                        color: FlutterFlowTheme.primaryColor,
-                                        size: 50,
-                                      ),
-                                    ),
-                                  );
-                                }
-                                List<HabitsRecord> rowHabitsRecordList =
-                                    snapshot.data;
-                                // Customize what your widget looks like with no query results.
-                                if (snapshot.data.isEmpty) {
-                                  return Container(
-                                    height: 100,
-                                    child: Center(
-                                      child: Text('No results.'),
-                                    ),
-                                  );
-                                }
-                                return Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: List.generate(
-                                      rowHabitsRecordList.length, (rowIndex) {
-                                    final rowHabitsRecord =
-                                        rowHabitsRecordList[rowIndex];
-                                    return PinnedHabitWidgetWidget(
-                                      habitRecord: rowHabitsRecord,
-                                    );
-                                  }),
-                                );
-                              },
-                            ),
+                            createPinnedHabits(),
                             Divider(
                                 height: 35,
                                 thickness: 1,
@@ -174,16 +184,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                                     FlutterFlowTheme.backgroundColor.darken(5)),
                             Expanded(
                               child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: HabitsOverviewWidgetWidget(),
-                                  )
-                                ],
-                              ),
-                            )
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: []),
+                            ),
                           ],
                         ),
                       ),

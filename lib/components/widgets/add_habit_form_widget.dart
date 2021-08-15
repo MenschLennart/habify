@@ -1,40 +1,39 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:habify/backend/services/backendless/backendless.dart';
+import 'package:habify/entities/habit.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
-import '../auth/auth_util.dart';
-import '../backend/backend.dart';
-import '../flutter_flow/flutter_flow_drop_down_template.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
-import '../flutter_flow/flutter_flow_util.dart';
-import '../flutter_flow/flutter_flow_widgets.dart';
+import 'package:habify/flutter_flow/flutter_flow_drop_down_template.dart';
+import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+import 'package:habify/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../extensions/color.dart';
+import 'package:habify/extensions/color.dart';
 
 class AddHabitFormWidget extends StatefulWidget {
-  AddHabitFormWidget({Key key}) : super(key: key);
-
+  AddHabitFormWidget({Key? key}) : super(key: key);
   @override
   _AddHabitFormWidgetState createState() => _AddHabitFormWidgetState();
 }
 
 class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
-  DateTime datePicked;
-  Icon _icon;
-  String habitTypeValue;
-  TextEditingController nameController;
-  TextEditingController descriptionController;
+  DateTime datePicked = DateTime.now();
+  Icon? _selectedIcon;
+  String? habitTypeValue;
+  TextEditingController? nameController = TextEditingController();
+  TextEditingController? descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  Map? _icon;
 
   Color _inputFieldColor = FlutterFlowTheme.primaryColor.lighten(95);
   Color _inputFieldBorderColor = FlutterFlowTheme.primaryColor.lighten(90);
   Color _inputFieldTextColor = FlutterFlowTheme.inputTextColor;
 
   _pickIcon() async {
-    IconData icon = await FlutterIconPicker.showIconPicker(context,
+    IconData? icon = await FlutterIconPicker.showIconPicker(context,
         iconPackMode: IconPack.fontAwesomeIcons,
         iconColor: FlutterFlowTheme.primaryColor,
         title: Text('Icon auswählen...'),
@@ -45,20 +44,27 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
           color: FlutterFlowTheme.primaryColor,
         ));
     setState(() {
-      _icon = Icon(icon);
+      _selectedIcon = Icon(icon);
+      _icon = {
+        "codePoint": _selectedIcon?.icon!.codePoint,
+        "fontFamily": _selectedIcon?.icon!.fontFamily,
+        "fontPackage": _selectedIcon?.icon!.fontPackage,
+      };
     });
   }
 
   @override
   void initState() {
     super.initState();
-    datePicked = DateTime.now();
-    descriptionController = TextEditingController();
-    nameController = TextEditingController();
     initializeDateFormatting('de_DE', null);
-    _icon = Icon(
+    _selectedIcon = Icon(
         FaIcon(FontAwesomeIcons.accusoft, color: FlutterFlowTheme.primaryColor)
             .icon);
+    _icon = {
+      "codePoint": _selectedIcon?.icon!.codePoint,
+      "fontFamily": _selectedIcon?.icon!.fontFamily,
+      "fontPackage": _selectedIcon?.icon!.fontPackage,
+    };
   }
 
   @override
@@ -165,8 +171,9 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                                 duration:
                                                     Duration(milliseconds: 300),
                                                 child: IconButton(
-                                                  onPressed: () => _pickIcon(),
-                                                  icon: _icon,
+                                                  onPressed: () async =>
+                                                      await _pickIcon(),
+                                                  icon: _selectedIcon!,
                                                   iconSize: 32,
                                                   color: FlutterFlowTheme
                                                       .primaryColor,
@@ -246,7 +253,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                       new LengthLimitingTextInputFormatter(21)
                                     ],
                                     validator: (val) {
-                                      if (val.isEmpty) {
+                                      if (val!.isEmpty) {
                                         return 'Field is required';
                                       }
                                       if (val.length < 3) {
@@ -327,7 +334,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                     maxLines: 4,
                                     keyboardType: TextInputType.multiline,
                                     validator: (val) {
-                                      if (val.isEmpty) {
+                                      if (val!.isEmpty) {
                                         return 'Field is required';
                                       }
 
@@ -392,7 +399,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  Navigator.pop(context);
+                                  Navigator.pop(context, false);
                                 },
                                 text: 'Cancel',
                                 options: FFButtonOptions(
@@ -422,26 +429,27 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                               padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                               child: FFButtonWidget(
                                 onPressed: () async {
-                                  if (!formKey.currentState.validate()) {
+                                  if (!formKey.currentState!.validate()) {
                                     return;
                                   }
-                                  final habitsCreateData =
-                                      createHabitsRecordData(
-                                    name: nameController.text,
-                                    editedAt: getCurrentTimestamp,
-                                    description: descriptionController.text,
-                                    createdAt: getCurrentTimestamp,
-                                    dueDate:
-                                        dateTimeFormat('MMMMEEEEd', datePicked),
-                                    user: currentUserReference,
-                                    type: habitTypeValue,
-                                    pinned: false,
-                                    iconCodePoint: _icon.icon.codePoint,
-                                  );
-                                  await HabitsRecord.collection
-                                      .doc()
-                                      .set(habitsCreateData);
-                                  Navigator.pop(context);
+
+                                  _icon = {
+                                    "codePoint": _selectedIcon?.icon?.codePoint,
+                                    "fontFamily":
+                                        _selectedIcon?.icon?.fontFamily,
+                                    "fontPackage":
+                                        _selectedIcon?.icon?.fontPackage,
+                                  };
+
+                                  Habit createdHabit = Habit();
+                                  createdHabit
+                                    ..description = descriptionController?.text
+                                    ..icon = _icon
+                                    ..pinned = false
+                                    ..title = nameController?.text;
+                                  BackendlessService.repository
+                                      .insert(createdHabit.toMap(), "Habit");
+                                  Navigator.pop(context, true);
                                 },
                                 text: 'Erstellen',
                                 icon: Icon(

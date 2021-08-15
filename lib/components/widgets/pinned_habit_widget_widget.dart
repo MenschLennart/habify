@@ -3,48 +3,50 @@ import 'dart:ui';
 
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:habify/entities/habit.dart';
 import 'package:intl/intl.dart';
 
-import '../backend/backend.dart';
-import '../extensions/color.dart';
-import '../flutter_flow/flutter_flow_theme.dart';
+import 'package:habify/extensions/color.dart';
+import 'package:habify/flutter_flow/flutter_flow_theme.dart';
 
-class PinnedHabitWidgetWidget extends StatefulWidget {
-  final HabitsRecord habitRecord;
+class PinnedHabitWidget extends StatefulWidget {
+  final Habit habit;
 
-  PinnedHabitWidgetWidget({
-    Key key,
-    this.habitRecord,
+  PinnedHabitWidget({
+    Key? key,
+    required this.habit,
   }) : super(key: key);
 
   @override
-  _PinnedHabitWidgetWidgetState createState() =>
-      _PinnedHabitWidgetWidgetState();
+  _PinnedHabitWidgetState createState() => _PinnedHabitWidgetState();
 }
 
-class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
-  Timer _timer;
-  String _habitTimeDuration;
-  DateTime _habitDateTime;
-  Icon _icon;
+class _PinnedHabitWidgetState extends State<PinnedHabitWidget> {
+  Timer? _timer;
+  String? _habitTimeDuration;
+  DateTime? _habitDateTime;
+  Map? _iconData;
+  Icon? _icon;
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _habitDateTime = widget.habitRecord.createdAt;
+    _habitDateTime = widget.habit.created;
+    _iconData = widget.habit.icon;
     _updateHabitDuration();
     _timer = new Timer.periodic(
         Duration(minutes: 1), (Timer timer) => _updateHabitDuration());
-    widget.habitRecord.iconCodePoint == null
+    widget.habit.icon == null
         ? _icon = Icon(Icons.ac_unit)
-        : _icon = Icon(IconData(widget.habitRecord.iconCodePoint,
-            fontFamily: 'FontAwesomeIcons'));
+        : _icon = Icon(IconData(_iconData?["codePoint"],
+            fontFamily: _iconData?["fontFamily"],
+            fontPackage: _iconData?["fontPackage"]));
   }
 
   String _habitTimeToDuration(DateTime habitDateTime, DurationTersity tersity) {
@@ -55,7 +57,7 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
   void _updateHabitDuration() {
     setState(() {
       _habitTimeDuration =
-          _habitTimeToDuration(_habitDateTime, DurationTersity.hour);
+          _habitTimeToDuration(_habitDateTime!, DurationTersity.hour);
     });
   }
 
@@ -91,7 +93,7 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(_icon.icon,
+                            Icon(_icon?.icon,
                                 color: FlutterFlowTheme.primaryColor),
                           ],
                         ),
@@ -103,7 +105,7 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.habitRecord.name,
+                              widget.habit.title!,
                               style: FlutterFlowTheme.subtitle2.override(
                                 fontFamily: 'Montserrat',
                                 color: FlutterFlowTheme.primaryColor,
@@ -112,7 +114,7 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
                               ),
                             ),
                             Text(
-                              _habitTimeDuration,
+                              _habitTimeDuration!,
                               style: FlutterFlowTheme.bodyText1.override(
                                 fontFamily: 'Manrope',
                                 color: FlutterFlowTheme.primaryColor.darken(5),
@@ -120,14 +122,13 @@ class _PinnedHabitWidgetWidgetState extends State<PinnedHabitWidgetWidget> {
                               ),
                             ),
                             Text(
-                              DateFormat.yMMMMd()
-                                  .format(widget.habitRecord.createdAt),
+                              DateFormat.yMMMMd().format(widget.habit.created!),
                               style: FlutterFlowTheme.bodyText1.override(
                                 fontFamily: 'Manrope',
                               ),
                             ),
                             Text(
-                              widget.habitRecord.createdAt
+                              widget.habit.created!
                                   .difference(DateTime.now())
                                   .inMinutes
                                   .toString(),

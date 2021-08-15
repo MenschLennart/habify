@@ -1,15 +1,14 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter/material.dart';
-import 'package:habify/home_page/home_page_widget.dart';
-import 'package:habify/login_register/login_register_widget.dart';
-import 'auth/firebase_user_provider.dart';
+import 'package:habify/entities/secret.dart';
+import 'package:habify/backend/services/backendless/backendless.dart';
+import 'package:habify/views/home_page/home_page_widget.dart';
+import 'package:habify/views/login_register/login_register_widget.dart';
 import 'flutter_flow/flutter_flow_theme.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'profile_page/profile_page_widget.dart';
+import 'package:habify/views/profile_page/profile_page_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -20,14 +19,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Stream<HabifyFirebaseUser> userStream;
-  HabifyFirebaseUser initialUser;
+  BackendlessUser? currentUser;
+  bool isLoggedIn = false;
+
+  static const String SERVER_URL = "https://eu-api.backendless.com";
+  static const String APPLICATION_ID = "DC3BB34C-C5BF-3900-FFD2-B1AE7EACDA00";
+  static const String ANDROID_API_KEY = "B81495FA-49EB-4BE5-A1E2-8E2D53290E7B";
+  static const String IOS_API_KEY = "AE4A0D94-F471-42F0-B6D1-1F8D2FE38ABF";
 
   @override
   void initState() {
     super.initState();
-    userStream = habifyFirebaseUserStream()
-      ..listen((user) => initialUser ?? setState(() => initialUser = user));
+
+    BackendSecret secret = BackendSecret()
+      ..applicationId = APPLICATION_ID
+      ..androidAppSecret = ANDROID_API_KEY
+      ..iosAppSecret = IOS_API_KEY
+      ..customUrl = SERVER_URL;
+
+    BackendlessService.initialize(backendSecret: secret);
+    Backendless.userService.getCurrentUser().then((value) {
+      if (value != null) {
+        isLoggedIn = true;
+        currentUser = value;
+      }
+    });
   }
 
   @override
@@ -35,28 +51,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Habify',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: initialUser == null
-          ? const Center(
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: SpinKitDoubleBounce(
-                  color: FlutterFlowTheme.primaryColor,
-                  size: 50,
-                ),
-              ),
-            )
-          : currentUser.loggedIn
-              ? NavBarPage()
-              : LoginRegisterWidget(),
+      home: isLoggedIn == true ? NavBarPage() : LoginRegisterWidget(),
     );
   }
 }
 
 class NavBarPage extends StatefulWidget {
-  NavBarPage({Key key, this.initialPage}) : super(key: key);
+  final String? initialPage;
 
-  final String initialPage;
+  NavBarPage({Key? key, this.initialPage}) : super(key: key);
 
   @override
   _NavBarPageState createState() => _NavBarPageState();

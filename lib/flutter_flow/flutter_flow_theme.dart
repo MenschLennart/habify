@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../extensions/color.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class FlutterFlowTheme {
@@ -60,13 +59,13 @@ class FlutterFlowTheme {
 
 extension TextStyleHelper on TextStyle {
   TextStyle override(
-          {String fontFamily,
-          Color color,
-          double fontSize,
-          FontWeight fontWeight,
-          FontStyle fontStyle}) =>
+          {String? fontFamily,
+          Color? color,
+          double? fontSize,
+          FontWeight? fontWeight,
+          FontStyle? fontStyle}) =>
       GoogleFonts.getFont(
-        fontFamily,
+        fontFamily!,
         color: color ?? this.color,
         fontSize: fontSize ?? this.fontSize,
         fontWeight: fontWeight ?? this.fontWeight,
