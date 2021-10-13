@@ -6,6 +6,8 @@ class Category {
 
   Category();
 
+  Object toObject() => toMap();
+
   Map<dynamic, dynamic> toMap() {
     return {
       "title": this.title,

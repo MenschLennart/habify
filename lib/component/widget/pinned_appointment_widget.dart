@@ -3,29 +3,28 @@ import 'dart:ui';
 
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
-import 'package:habify/entities/habit.dart';
+import 'package:heureka/entity/appointment.dart';
 import 'package:intl/intl.dart';
+import 'package:heureka/extensions/color.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
 
-import 'package:habify/extensions/color.dart';
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+class PinnedAppointmentWidget extends StatefulWidget {
+  final Appointment appointment;
 
-class PinnedHabitWidget extends StatefulWidget {
-  final Habit habit;
-
-  PinnedHabitWidget({
+  PinnedAppointmentWidget({
     Key? key,
-    required this.habit,
+    required this.appointment,
   }) : super(key: key);
 
   @override
-  _PinnedHabitWidgetState createState() => _PinnedHabitWidgetState();
+  _PinnedAppointmentWidgetState createState() =>
+      _PinnedAppointmentWidgetState();
 }
 
-class _PinnedHabitWidgetState extends State<PinnedHabitWidget> {
+class _PinnedAppointmentWidgetState extends State<PinnedAppointmentWidget> {
   Timer? _timer;
-  String? _habitTimeDuration;
-  DateTime? _habitDateTime;
-  Map? _iconData;
+  String? _appointmentTimeDuration;
+  DateTime? _appointmentDateTime;
   Icon? _icon;
 
   @override
@@ -37,27 +36,22 @@ class _PinnedHabitWidgetState extends State<PinnedHabitWidget> {
   @override
   void initState() {
     super.initState();
-    _habitDateTime = widget.habit.created;
-    _iconData = widget.habit.icon;
-    _updateHabitDuration();
+    _appointmentDateTime = widget.appointment.createdAt;
+    _updateAppointmentDuration();
     _timer = new Timer.periodic(
-        Duration(minutes: 1), (Timer timer) => _updateHabitDuration());
-    widget.habit.icon == null
-        ? _icon = Icon(Icons.ac_unit)
-        : _icon = Icon(IconData(_iconData?["codePoint"],
-            fontFamily: _iconData?["fontFamily"],
-            fontPackage: _iconData?["fontPackage"]));
+        Duration(minutes: 1), (Timer timer) => _updateAppointmentDuration());
   }
 
-  String _habitTimeToDuration(DateTime habitDateTime, DurationTersity tersity) {
-    Duration difference = DateTime.now().difference(habitDateTime);
+  String _appointmentTimeToDuration(
+      DateTime appointmentDateTime, DurationTersity tersity) {
+    Duration difference = DateTime.now().difference(appointmentDateTime);
     return printDuration(aMinute * difference.inMinutes, tersity: tersity);
   }
 
-  void _updateHabitDuration() {
+  void _updateAppointmentDuration() {
     setState(() {
-      _habitTimeDuration =
-          _habitTimeToDuration(_habitDateTime!, DurationTersity.hour);
+      _appointmentTimeDuration = _appointmentTimeToDuration(
+          _appointmentDateTime!, DurationTersity.hour);
     });
   }
 
@@ -105,7 +99,7 @@ class _PinnedHabitWidgetState extends State<PinnedHabitWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.habit.title!,
+                              widget.appointment.title!,
                               style: FlutterFlowTheme.subtitle2.override(
                                 fontFamily: 'Montserrat',
                                 color: FlutterFlowTheme.primaryColor,
@@ -114,7 +108,7 @@ class _PinnedHabitWidgetState extends State<PinnedHabitWidget> {
                               ),
                             ),
                             Text(
-                              _habitTimeDuration!,
+                              _appointmentTimeDuration!,
                               style: FlutterFlowTheme.bodyText1.override(
                                 fontFamily: 'Manrope',
                                 color: FlutterFlowTheme.primaryColor.darken(5),
@@ -122,13 +116,14 @@ class _PinnedHabitWidgetState extends State<PinnedHabitWidget> {
                               ),
                             ),
                             Text(
-                              DateFormat.yMMMMd().format(widget.habit.created!),
+                              DateFormat.yMMMMd()
+                                  .format(widget.appointment.createdAt!),
                               style: FlutterFlowTheme.bodyText1.override(
                                 fontFamily: 'Manrope',
                               ),
                             ),
                             Text(
-                              widget.habit.created!
+                              widget.appointment.createdAt!
                                   .difference(DateTime.now())
                                   .inMinutes
                                   .toString(),

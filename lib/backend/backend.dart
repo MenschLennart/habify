@@ -1,5 +1,5 @@
-import 'package:habify/entities/repository.dart';
-import 'package:habify/entities/secret.dart';
+import 'package:heureka/entity/repository.dart';
+import 'package:heureka/entity/secret.dart';
 
 abstract class BackendService {
   factory BackendService() => BackendService();

@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "habify",
+            "name": "HEUREKA",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "habify (debug)",
+            "name": "HEUREKA (debug)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
         },
         {
-            "name": "habify (profile mode)",
+            "name": "HEUREKA (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"

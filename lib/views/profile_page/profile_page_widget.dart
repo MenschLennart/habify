@@ -1,8 +1,8 @@
 import 'package:backendless_sdk/backendless_sdk.dart';
 
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
-import 'package:habify/flutter_flow/flutter_flow_widgets.dart';
-import 'package:habify/views/login_register/login_register_widget.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/flutter_flow/flutter_flow_widgets.dart';
+import 'package:heureka/views/login_register/login_register_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePageWidget extends StatefulWidget {

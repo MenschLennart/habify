@@ -11,6 +11,8 @@ class Customer {
 
   Customer();
 
+  Object toObject() => toMap();
+
   Map<dynamic, dynamic> toMap() => {
         "email": this.email,
         "objectId": this.objectId,

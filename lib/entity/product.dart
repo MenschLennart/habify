@@ -10,6 +10,8 @@ class Product {
 
   Product();
 
+  Object toObject() => toMap();
+
   Map<dynamic, dynamic> toMap() => {
         "ownerId": this.ownerId,
         "created": this.created,

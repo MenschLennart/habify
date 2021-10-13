@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:habify/entities/habit.dart';
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
-import 'package:habify/extensions/color.dart';
+import 'package:heureka/entity/appointment.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/extensions/color.dart';
 
-class HabitPageWidget extends StatefulWidget {
-  const HabitPageWidget({Key? key, required this.habit}) : super(key: key);
-  final Habit habit;
+class AppointmentPageWidget extends StatefulWidget {
+  const AppointmentPageWidget({Key? key, required this.appointment})
+      : super(key: key);
+  final Appointment appointment;
 
   @override
-  _HabitPageWidgetState createState() => _HabitPageWidgetState();
+  _AppointmentPageWidgetState createState() => _AppointmentPageWidgetState();
 }
 
-class _HabitPageWidgetState extends State<HabitPageWidget> {
+class _AppointmentPageWidgetState extends State<AppointmentPageWidget> {
   Color _backgroundColor = FlutterFlowTheme.primaryColor.lighten(95);
 
   @override
@@ -19,7 +20,7 @@ class _HabitPageWidgetState extends State<HabitPageWidget> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.primaryColor,
-        title: Text(widget.habit.title!),
+        title: Text(widget.appointment.title!),
         automaticallyImplyLeading: true,
         centerTitle: true,
       ),
@@ -35,7 +36,7 @@ class _HabitPageWidgetState extends State<HabitPageWidget> {
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
                   margin: EdgeInsets.all(10),
-                  child: Text(widget.habit.description!),
+                  child: Text(widget.appointment.description!),
                 ),
                 Container(
                   width: double.infinity,

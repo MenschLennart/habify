@@ -1,10 +1,10 @@
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:habify/backend/services/backendless/backendless.dart';
-import 'package:habify/entities/habit.dart';
-import 'package:habify/views/add_habit/add_habit_widget.dart';
-import 'package:habify/components/widgets/pinned_habit_widget_widget.dart';
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
-import 'package:habify/extensions/color.dart';
+import 'package:heureka/component/widget/book_appointment_widget.dart';
+import 'package:heureka/entity/appointment.dart';
+import 'package:heureka/model/home_model.dart';
+import 'package:heureka/component/widget/pinned_appointment_widget.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/extensions/color.dart';
 import 'package:flutter/material.dart';
 
 class HomePageWidget extends StatefulWidget {
@@ -16,21 +16,14 @@ class HomePageWidget extends StatefulWidget {
 
 class _HomePageWidgetState extends State<HomePageWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final homePageModel = HomeModel();
 
-  List<Map?>? _habits;
+  List<Appointment?> _appointments = <Appointment>[];
   bool _isLoading = true;
 
-  Future<List<Map?>?> createHabitList() async {
-    String? objectId = BackendlessService.repository.getCurrentUser()?.objectId;
-    List<Map?>? habits = await BackendlessService.repository
-        .queryWhere("ownerId = '$objectId'", "Habit");
-
-    return habits;
-  }
-
-  updateHabits() async {
+  fetchAppointments() async {
     _isLoading = true;
-    _habits = await createHabitList();
+    _appointments.addAll(await homePageModel.fetchAppointments());
     setState(() {
       _isLoading = false;
     });
@@ -39,10 +32,10 @@ class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
-    updateHabits();
+    fetchAppointments();
   }
 
-  createPinnedHabits() {
+  createPinnedAppointments() {
     // Customize what your widget looks like when it's loading.
     if (_isLoading == true) {
       return Center(
@@ -57,7 +50,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       );
     }
 
-    if (_habits!.isEmpty) {
+    if (_appointments.isEmpty) {
       return Center(
         child: Text('Nothing found.'),
       );
@@ -67,8 +60,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: List.generate(_habits!.length, (index) {
-        return PinnedHabitWidget(habit: Habit.fromJSON(_habits![index]!));
+      children: List.generate(_appointments.length, (index) {
+        return PinnedAppointmentWidget(
+            appointment: _appointments[index] as Appointment);
       }),
     );
   }
@@ -142,11 +136,11 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddHabitWidget(),
+                builder: (context) => BookAppointmentWidget(),
               ),
             );
 
-            if (result == true) updateHabits();
+            if (result == true) fetchAppointments();
           },
           icon: Icon(
             Icons.add,
@@ -174,7 +168,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            createPinnedHabits(),
+                            createPinnedAppointments(),
                             Divider(
                                 height: 35,
                                 thickness: 1,

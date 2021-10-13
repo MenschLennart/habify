@@ -1,7 +1,7 @@
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'package:habify/backend/backend.dart';
-import 'package:habify/backend/services/backendless/repository.dart';
-import 'package:habify/entities/secret.dart';
+import 'package:heureka/backend/backend.dart';
+import 'package:heureka/backend/services/backendless/repository.dart';
+import 'package:heureka/entity/secret.dart';
 
 class BackendlessService implements BackendService {
   static final BackendlessService _singleton =
@@ -34,6 +34,7 @@ class BackendlessService implements BackendService {
         applicationId: dynamicSecret.applicationId,
         androidApiKey: dynamicSecret.androidAppSecret,
         iosApiKey: dynamicSecret.iosAppSecret,
+        jsApiKey: dynamicSecret.jsAppSecret,
       );
     } catch (e, s) {
       print('Exception details:\n $e');

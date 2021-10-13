@@ -8,6 +8,8 @@ class Habit {
 
   Habit();
 
+  Object toObject() => toMap();
+
   Map<dynamic, dynamic> toMap() {
     return {
       'pinned': pinned,

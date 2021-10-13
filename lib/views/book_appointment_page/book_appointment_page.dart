@@ -1,15 +1,15 @@
-import 'package:habify/components/widgets/add_habit_form_widget.dart';
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/component/widget/book_appointment_widget.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 
-class AddHabitWidget extends StatefulWidget {
-  AddHabitWidget({Key? key}) : super(key: key);
+class BookAppointmentPage extends StatefulWidget {
+  BookAppointmentPage({Key? key}) : super(key: key);
 
   @override
-  _AddHabitWidgetState createState() => _AddHabitWidgetState();
+  _BookAppointmentPageState createState() => _BookAppointmentPageState();
 }
 
-class _AddHabitWidgetState extends State<AddHabitWidget> {
+class _BookAppointmentPageState extends State<BookAppointmentPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -32,7 +32,7 @@ class _AddHabitWidgetState extends State<AddHabitWidget> {
         actions: [],
         centerTitle: true,
       ),
-      body: AddHabitFormWidget(),
+      body: BookAppointmentWidget(),
       backgroundColor: FlutterFlowTheme.backgroundColor,
     );
   }

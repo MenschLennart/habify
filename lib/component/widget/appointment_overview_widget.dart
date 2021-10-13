@@ -1,20 +1,22 @@
-import 'package:habify/entities/habit.dart';
+import 'package:heureka/entity/appointment.dart';
 
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:habify/extensions/color.dart';
+import 'package:heureka/extensions/color.dart';
 
-class HabitsOverviewWidget extends StatefulWidget {
-  final List<Habit> habitList;
+class AppointmentOverviewWidget extends StatefulWidget {
+  final List<Appointment> appointmentList;
 
-  HabitsOverviewWidget({Key? key, required this.habitList}) : super(key: key);
+  AppointmentOverviewWidget({Key? key, required this.appointmentList})
+      : super(key: key);
 
   @override
-  _HabitsOverviewWidgetState createState() => _HabitsOverviewWidgetState();
+  _AppointmentOverviewWidgetState createState() =>
+      _AppointmentOverviewWidgetState();
 }
 
-class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
+class _AppointmentOverviewWidgetState extends State<AppointmentOverviewWidget> {
   @override
   void initState() {
     super.initState();
@@ -40,7 +42,7 @@ class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    'Deine Habits',
+                    'Deine Termine',
                     textAlign: TextAlign.start,
                     style: FlutterFlowTheme.title3.override(
                       fontFamily: 'Montserrat',
@@ -58,7 +60,7 @@ class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
               children: [
                 Expanded(
                   child: Text(
-                    'All deine laufenden Habits',
+                    'All deine Termine',
                     textAlign: TextAlign.start,
                     style: FlutterFlowTheme.subtitle2.override(
                       fontFamily: 'Montserrat',
@@ -83,9 +85,9 @@ class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
                       SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
-                          children:
-                              List.generate(widget.habitList.length, (index) {
-                            final habit = widget.habitList[index];
+                          children: List.generate(widget.appointmentList.length,
+                              (index) {
+                            final appointment = widget.appointmentList[index];
                             return Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -119,7 +121,7 @@ class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
                                       children: [
                                         ListTile(
                                           title: Text(
-                                            habit.title!,
+                                            appointment.title!,
                                             style: FlutterFlowTheme.title3
                                                 .override(
                                               fontFamily: 'Montserrat',
@@ -128,7 +130,7 @@ class _HabitsOverviewWidgetState extends State<HabitsOverviewWidget> {
                                             ),
                                           ),
                                           subtitle: Text(
-                                            habit.description!,
+                                            appointment.description!,
                                             style: FlutterFlowTheme.subtitle2
                                                 .override(
                                               fontFamily: 'Montserrat',

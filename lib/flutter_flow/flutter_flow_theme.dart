@@ -13,6 +13,22 @@ class FlutterFlowTheme {
   String primaryFontFamily = 'Poppins';
   String secondaryFontFamily = 'Roboto';
 
+  static TextStyle get primaryButton => GoogleFonts.getFont(
+        'Poppins',
+        color: tertiaryColor,
+        fontWeight: FontWeight.w500,
+        fontSize: 18,
+        backgroundColor: primaryColor,
+      );
+
+  static TextStyle get secondaryButton => GoogleFonts.getFont(
+        'Poppins',
+        color: primaryColor,
+        fontWeight: FontWeight.w400,
+        fontSize: 15,
+        backgroundColor: backgroundColor,
+      );
+
   static TextStyle get title1 => GoogleFonts.getFont(
         'Poppins',
         color: Color(0xFF303030),

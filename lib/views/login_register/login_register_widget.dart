@@ -1,9 +1,13 @@
 import 'package:backendless_sdk/backendless_sdk.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
-import 'package:habify/flutter_flow/flutter_flow_widgets.dart';
-import 'package:habify/main.dart';
+import 'package:heureka/backend/services/parse/parse.dart';
+import 'package:heureka/entity/user.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/flutter_flow/flutter_flow_widgets.dart';
+import 'package:heureka/main.dart';
 import 'package:flutter/material.dart';
+import 'package:heureka/model/login_register_model.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 
 class LoginRegisterWidget extends StatefulWidget {
   LoginRegisterWidget({Key? key}) : super(key: key);
@@ -23,6 +27,8 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
   bool loginPasswordVisibility = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final LoginRegisterModel loginRegisterModel = LoginRegisterModel();
+
   @override
   void initState() {
     super.initState();
@@ -38,33 +44,32 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(16, 52, 16, 4),
+            padding: EdgeInsets.fromLTRB(16, 50, 16, 0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Welcome To',
+                  'HEUREKA',
                   style: FlutterFlowTheme.title1.override(
                     fontFamily: 'Poppins',
+                    fontSize: 54,
                     color: FlutterFlowTheme.tertiaryColor,
                   ),
-                )
+                ),
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 5),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/LogoFull@3x.png',
-                  width: 250,
-                  height: 38,
-                  fit: BoxFit.fitHeight,
-                )
+                Text('Dein IT-Cafe',
+                    style: FlutterFlowTheme.title2.override(
+                      fontFamily: 'Poppins',
+                      fontSize: 20,
+                    )),
               ],
             ),
           ),
@@ -280,42 +285,35 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                   padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
                                   child: FFButtonWidget(
                                     onPressed: () async {
-                                      Backendless.userService
-                                          .login(
-                                              loginEmailAddressController.text,
-                                              loginPasswordController.text,
-                                              true)
-                                          .then((user) {
-                                        Backendless.userService
-                                            .isValidLogin()
-                                            .then((response) async {
-                                          if (response != null) {
-                                            await Navigator.pushAndRemoveUntil(
+                                      final String email =
+                                          loginEmailAddressController.text;
+                                      final String password =
+                                          loginPasswordController.text;
+
+                                      try {
+                                        if (await loginRegisterModel.login(
+                                            email, password)) {
+                                          await Navigator.pushAndRemoveUntil(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) =>
-                                                    NavBarPage(
-                                                        initialPage:
-                                                            'HomePage'),
-                                              ),
-                                              (r) => false,
-                                            );
-                                          } else {
-                                            return;
-                                          }
-                                        });
-                                      });
+                                                  builder: (context) =>
+                                                      NavBarPage(
+                                                        initialPage: 'HomePage',
+                                                      )),
+                                              (route) => false);
+                                        }
+                                      } catch (e) {
+                                        print(e);
+                                      }
+
+                                      return;
                                     },
                                     text: 'Login',
                                     options: FFButtonOptions(
                                       width: 230,
                                       height: 50,
                                       color: FlutterFlowTheme.primaryColor,
-                                      textStyle:
-                                          FlutterFlowTheme.subtitle2.override(
-                                        fontFamily: 'Poppins',
-                                        color: Colors.white,
-                                      ),
+                                      textStyle: FlutterFlowTheme.primaryButton,
                                       elevation: 3,
                                       borderSide: BorderSide(
                                         color: Colors.transparent,
@@ -337,10 +335,7 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                       height: 30,
                                       color: Colors.transparent,
                                       textStyle:
-                                          FlutterFlowTheme.subtitle2.override(
-                                        fontFamily: 'Poppins',
-                                        color: FlutterFlowTheme.primaryColor,
-                                      ),
+                                          FlutterFlowTheme.secondaryButton,
                                       elevation: 0,
                                       borderSide: BorderSide(
                                         color: Colors.transparent,
@@ -697,16 +692,16 @@ class _LoginRegisterWidgetState extends State<LoginRegisterWidget> {
                                         return;
                                       }
 
-                                      BackendlessUser user = BackendlessUser()
+                                      User user = User()
                                         ..email = createEmailController.text
                                         ..password =
                                             createPasswordController.text;
 
-                                      Backendless.userService
-                                          .register(user)
-                                          .onError((error, stackTrace) {
-                                        return;
-                                      }).then((value) async {
+                                      ParseService.repository
+                                          .save(user, "User")
+                                          .onError((error, stackTrace) =>
+                                              throw Exception(error))
+                                          .then((value) async {
                                         await Navigator.pushAndRemoveUntil(
                                           context,
                                           MaterialPageRoute(

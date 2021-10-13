@@ -1,70 +1,40 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:habify/backend/services/backendless/backendless.dart';
-import 'package:habify/entities/habit.dart';
+import 'package:heureka/backend/services/parse/parse.dart';
+import 'package:heureka/entity/appointment.dart';
+import 'package:heureka/entity/categories.dart';
+import 'package:heureka/entity/product.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
-import 'package:habify/flutter_flow/flutter_flow_drop_down_template.dart';
-import 'package:habify/flutter_flow/flutter_flow_theme.dart';
-import 'package:habify/flutter_flow/flutter_flow_widgets.dart';
+import 'package:heureka/flutter_flow/flutter_flow_drop_down_template.dart';
+import 'package:heureka/flutter_flow/flutter_flow_theme.dart';
+import 'package:heureka/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:habify/extensions/color.dart';
+import 'package:heureka/extensions/color.dart';
 
-class AddHabitFormWidget extends StatefulWidget {
-  AddHabitFormWidget({Key? key}) : super(key: key);
+class BookAppointmentWidget extends StatefulWidget {
+  BookAppointmentWidget({Key? key}) : super(key: key);
   @override
-  _AddHabitFormWidgetState createState() => _AddHabitFormWidgetState();
+  _BookAppointmentWidgetState createState() => _BookAppointmentWidgetState();
 }
 
-class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
+class _BookAppointmentWidgetState extends State<BookAppointmentWidget> {
   DateTime datePicked = DateTime.now();
-  Icon? _selectedIcon;
-  String? habitTypeValue;
+  String? appointmentTypeValue;
   TextEditingController? nameController = TextEditingController();
   TextEditingController? descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  Map? _icon;
 
   Color _inputFieldColor = FlutterFlowTheme.primaryColor.lighten(95);
   Color _inputFieldBorderColor = FlutterFlowTheme.primaryColor.lighten(90);
   Color _inputFieldTextColor = FlutterFlowTheme.inputTextColor;
 
-  _pickIcon() async {
-    IconData? icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.fontAwesomeIcons,
-        iconColor: FlutterFlowTheme.primaryColor,
-        title: Text('Icon auswählen...'),
-        searchHintText: 'Suchen...',
-        noResultsText: 'Leider nichts gefunden...',
-        closeChild: Icon(
-          FaIcon(FontAwesomeIcons.timesCircle).icon,
-          color: FlutterFlowTheme.primaryColor,
-        ));
-    setState(() {
-      _selectedIcon = Icon(icon);
-      _icon = {
-        "codePoint": _selectedIcon?.icon!.codePoint,
-        "fontFamily": _selectedIcon?.icon!.fontFamily,
-        "fontPackage": _selectedIcon?.icon!.fontPackage,
-      };
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('de_DE', null);
-    _selectedIcon = Icon(
-        FaIcon(FontAwesomeIcons.accusoft, color: FlutterFlowTheme.primaryColor)
-            .icon);
-    _icon = {
-      "codePoint": _selectedIcon?.icon!.codePoint,
-      "fontFamily": _selectedIcon?.icon!.fontFamily,
-      "fontPackage": _selectedIcon?.icon!.fontPackage,
-    };
   }
 
   @override
@@ -111,8 +81,8 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                             initialOption: 'Good',
                                             options: ['Good', 'Bad'],
                                             onChanged: (value) {
-                                              setState(
-                                                  () => habitTypeValue = value);
+                                              setState(() =>
+                                                  appointmentTypeValue = value);
                                             },
                                             width: 150,
                                             height: 50,
@@ -166,20 +136,7 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                                 MainAxisAlignment.center,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
-                                            children: [
-                                              AnimatedSwitcher(
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                child: IconButton(
-                                                  onPressed: () async =>
-                                                      await _pickIcon(),
-                                                  icon: _selectedIcon!,
-                                                  iconSize: 32,
-                                                  color: FlutterFlowTheme
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ],
+                                            children: [],
                                           ),
                                         ),
                                       )
@@ -433,22 +390,13 @@ class _AddHabitFormWidgetState extends State<AddHabitFormWidget> {
                                     return;
                                   }
 
-                                  _icon = {
-                                    "codePoint": _selectedIcon?.icon?.codePoint,
-                                    "fontFamily":
-                                        _selectedIcon?.icon?.fontFamily,
-                                    "fontPackage":
-                                        _selectedIcon?.icon?.fontPackage,
-                                  };
-
-                                  Habit createdHabit = Habit();
-                                  createdHabit
+                                  Appointment newAppointment = Appointment();
+                                  newAppointment
                                     ..description = descriptionController?.text
-                                    ..icon = _icon
-                                    ..pinned = false
-                                    ..title = nameController?.text;
-                                  BackendlessService.repository
-                                      .insert(createdHabit.toMap(), "Habit");
+                                    ..product = Product()
+                                    ..category = <Category>[];
+                                  ParseService.repository
+                                      .save(newAppointment, "Appointment");
                                   Navigator.pop(context, true);
                                 },
                                 text: 'Erstellen',

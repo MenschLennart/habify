@@ -1,36 +1,43 @@
 import 'package:backendless_sdk/backendless_sdk.dart';
-import 'package:habify/entities/repository.dart';
-import 'package:habify/entities/user.dart';
+import 'package:heureka/entity/repository.dart';
 
 class BackendlessRepository implements BackendRepository {
   @override
-  Future<Map?> insert(Map data, String tableName) {
-    return Backendless.data.of(tableName).save(data);
+  Future<List<Object?>> save(Object data, String tableName) async {
+    // Backendless use Map instead of Object - cast
+    Map? savedObject = await Backendless.data.of(tableName).save(data as Map);
+    List<Object?> dataList = [];
+
+    if (savedObject != null) {
+      return dataList..add(savedObject);
+    }
+
+    return <Object>[];
   }
 
   @override
-  Future<List<Map?>?> queryAll(String tableName) {
-    return Backendless.data.of(tableName).find();
+  Future<List<Map>> queryAll(String tableName) {
+    return Backendless.data.of(tableName).find() as Future<List<Map>>;
   }
 
   @override
-  Future<Map?> queryById(int id, String tableName) {
-    return Backendless.data.of(tableName).findById(id.toString());
+  Future<Object> queryById(int id, String tableName) {
+    return Backendless.data.of(tableName).findById(id.toString())
+        as Future<Object>;
   }
 
   @override
-  Future<List<Map?>?> queryWhere(String whereClause, String tableName) {
+  Future<List<Object>> queryWhere(String whereClause, String tableName,
+      {int pageSize = 0}) {
     DataQueryBuilder query = DataQueryBuilder()..whereClause = whereClause;
-    return Backendless.data.of(tableName).find(query);
+
+    // Limit if set
+    if (pageSize > 0) query.pageSize = pageSize;
+
+    return Backendless.data.of(tableName).find(query) as Future<List<Object>>;
   }
 
-  User? getCurrentUser() {
-    Backendless.userService.getCurrentUser().then((value) {
-      User user = User();
-      user.email = value?.email;
-      user.name = value?.getProperty("name");
-
-      return user;
-    });
+  Future<BackendlessUser?>? getCurrentUser() {
+    return Backendless.userService.getCurrentUser();
   }
 }
